@@ -1,6 +1,6 @@
 # PRN232 — Assignment 01: Task & Team Management Application
 
-**Author:** Le Kien Cuong  
+**Author:** Duong The Truyen
 **Student ID:** QE170128  
 **Class Code:** PRN232_SAMPLE  
 **Course:** PRN232 (Practical Exam 1)
