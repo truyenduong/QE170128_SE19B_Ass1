@@ -1,0 +1,9 @@
+**/.git
+**/.vs
+**/bin
+**/obj
+**/node_modules
+**/.next
+**/*.user
+**/*.db
+QE170128_SE19B.NET_Ass1_FE
