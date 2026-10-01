@@ -175,39 +175,39 @@ export default function TaskManagePage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            <CheckSquare className="w-7 h-7 text-sky-600 dark:text-sky-400" />
-            Task Management
+          <p className="mb-2 text-[10px] font-bold uppercase text-sky-300">Workspace settings</p>
+          <h1 className="flex items-center gap-2.5 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
+            <CheckSquare className="h-6 w-6 text-sky-300" /> Task board
           </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Create, update, assign tags, and soft-delete tasks across all active projects.
+          <p className="mt-2 text-sm text-slate-400">
+            Keep ownership, priority, and delivery dates in view.
           </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm shadow-md shadow-sky-500/10 transition-colors self-start sm:self-auto"
+          className="inline-flex items-center gap-2 self-start rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-sky-700 sm:self-auto"
         >
           <Plus className="w-4 h-4" />
-          Add Task
+          New task
         </button>
       </div>
 
       {/* Tasks Table */}
-      <div className="overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50/75 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               <tr>
-                <th className="px-6 py-4">ID</th>
-                <th className="px-6 py-4">Title</th>
+                <th className="px-6 py-4">Ref</th>
+                <th className="px-6 py-4">Work item</th>
                 <th className="px-6 py-4">Project</th>
-                <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4">State</th>
                 <th className="px-6 py-4">Priority</th>
-                <th className="px-6 py-4">Due Date</th>
-                <th className="px-6 py-4">Tags</th>
+                <th className="px-6 py-4">Due</th>
+                <th className="px-6 py-4">Labels</th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
@@ -216,13 +216,13 @@ export default function TaskManagePage() {
                 <tr>
                   <td colSpan={8} className="px-6 py-12 text-center text-slate-400">
                     <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-sky-600" />
-                    Loading active tasks...
+                    Loading the task board...
                   </td>
                 </tr>
               ) : tasks.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="px-6 py-12 text-center text-slate-400">
-                    No active tasks found.
+                    No active tasks on the board.
                   </td>
                 </tr>
               ) : (
@@ -279,14 +279,16 @@ export default function TaskManagePage() {
                         <button
                           onClick={() => openEditModal(task)}
                           className="p-1.5 rounded-lg text-slate-500 hover:text-sky-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                          title="Edit Task"
+                          title="Edit task"
+                          aria-label={`Edit ${task.title}`}
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setDeletingId(task.taskId)}
                           className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                          title="Soft-Delete Task"
+                          title="Deactivate task"
+                          aria-label={`Deactivate ${task.title}`}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -304,19 +306,19 @@ export default function TaskManagePage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingTask ? 'Edit Task' : 'Create Task'}
+        title={editingTask ? 'Update task' : 'Create a task'}
         maxWidth="max-w-xl"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-              Task Title <span className="text-red-500">*</span>
+              Task title <span className="text-red-400">*</span>
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Implement responsive navigation menu"
+              placeholder="Describe the piece of work"
               className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-white ${
                 formErrors.title ? 'border-red-500 focus:ring-red-400' : 'border-slate-200 dark:border-slate-700 focus:ring-sky-500'
               }`}
@@ -326,7 +328,7 @@ export default function TaskManagePage() {
 
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-              Project <span className="text-red-500">*</span>
+              Project <span className="text-red-400">*</span>
             </label>
             <select
               value={projectId}
@@ -353,7 +355,7 @@ export default function TaskManagePage() {
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Details on what needs to be implemented or resolved..."
+              placeholder="Add useful context for the person doing the work"
               className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-sky-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm"
             />
           </div>
@@ -368,10 +370,10 @@ export default function TaskManagePage() {
                 onChange={(e) => setStatus(parseInt(e.target.value, 10))}
                 className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-sky-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium"
               >
-                <option value={0}>0 — To Do</option>
-                <option value={1}>1 — In Progress</option>
-                <option value={2}>2 — Done</option>
-                <option value={3}>3 — Cancelled</option>
+                <option value={0}>To do</option>
+                <option value={1}>In progress</option>
+                <option value={2}>Done</option>
+                <option value={3}>Cancelled</option>
               </select>
             </div>
 
@@ -384,10 +386,10 @@ export default function TaskManagePage() {
                 onChange={(e) => setPriority(parseInt(e.target.value, 10))}
                 className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-sky-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium"
               >
-                <option value={0}>0 — Low</option>
-                <option value={1}>1 — Medium</option>
-                <option value={2}>2 — High</option>
-                <option value={3}>3 — Critical</option>
+                <option value={0}>Low</option>
+                <option value={1}>Medium</option>
+                <option value={2}>High</option>
+                <option value={3}>Critical</option>
               </select>
             </div>
 
@@ -404,11 +406,10 @@ export default function TaskManagePage() {
             </div>
           </div>
 
-          {/* Multi-select Tag selection */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5 flex items-center justify-between">
-              <span>Tags (Multi-select)</span>
-              <span className="text-[11px] text-slate-400 font-normal">Click to toggle tags</span>
+            <label className="mb-1.5 flex items-center justify-between text-xs font-bold uppercase text-slate-400">
+              <span>Labels</span>
+              <span className="text-[10px] font-normal normal-case text-slate-500">Choose any that apply</span>
             </label>
             <div className="p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 flex flex-wrap gap-2 max-h-36 overflow-y-auto">
               {tags.map((tag) => {
@@ -449,7 +450,7 @@ export default function TaskManagePage() {
               className="px-4 py-2 text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 disabled:opacity-50 rounded-lg shadow-sm transition-colors flex items-center gap-2"
             >
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
-              {editingTask ? 'Update Task' : 'Create Task'}
+              {editingTask ? 'Save task' : 'Create task'}
             </button>
           </div>
         </form>
@@ -460,9 +461,9 @@ export default function TaskManagePage() {
         isOpen={deletingId !== null}
         onClose={() => setDeletingId(null)}
         onConfirm={handleSoftDelete}
-        title="Soft-Delete Task"
-        message="Are you sure you want to deactivate this task? It will be soft-deleted by setting IsActive = false and will no longer appear in active project views."
-        confirmLabel="Deactivate Task"
+        title="Deactivate this task?"
+        message="This task will leave active project views. Its history remains available in the system."
+        confirmLabel="Deactivate task"
         isLoading={isDeleting}
       />
     </div>

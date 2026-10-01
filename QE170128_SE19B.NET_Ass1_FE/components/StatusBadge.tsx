@@ -15,15 +15,15 @@ export default function StatusBadge({ status, type = 'task', size = 'md' }: Stat
     bg: 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700',
   };
 
-  const sizeClasses = size === 'sm' 
-    ? 'text-xs px-2 py-0.5' 
-    : 'text-xs px-2.5 py-1 font-medium';
+  const sizeClasses = size === 'sm'
+    ? 'text-[10px] px-2 py-1'
+    : 'text-[11px] px-2.5 py-1.5';
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border ${config.bg} ${config.color} ${sizeClasses} transition-colors`}
+      className={`inline-flex items-center gap-1.5 rounded-full border font-semibold leading-none ${config.bg} ${config.color} ${sizeClasses} transition-colors`}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-current mr-1.5 opacity-70" />
+      <span className="size-1.5 rounded-full bg-current shadow-[0_0_7px_currentColor]" />
       {config.label}
     </span>
   );

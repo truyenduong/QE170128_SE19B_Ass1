@@ -37,17 +37,21 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
       />
 
       <div className="flex min-h-full items-center justify-center p-4 text-center">
-        <div 
-          className={`relative w-full ${maxWidth} transform overflow-hidden rounded-2xl bg-white dark:bg-slate-900 p-6 text-left shadow-2xl transition-all border border-slate-200 dark:border-slate-800 animate-in fade-in zoom-in-95 duration-150`}
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={title}
+          className={`relative w-full ${maxWidth} transform overflow-hidden rounded-xl bg-slate-900 p-6 text-left shadow-[0_28px_90px_rgba(0,0,0,0.55)] transition-all border border-slate-800 animate-in fade-in zoom-in-95 duration-150`}
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 mb-4">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+            <h3 className="text-lg font-semibold text-slate-100">
               {title}
             </h3>
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-slate-400 hover:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              aria-label="Close dialog"
+              className="rounded-lg p-2 text-slate-400 hover:text-slate-100 hover:bg-white/5 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>

@@ -2,7 +2,7 @@
 
 **Student ID:** QE170128  
 **Class Code:** PRN232_SAMPLE  
-**Student Name:** Le Kien Cuong
+**Student Name:** Duong The Truyen
 
 ## Project Links
 

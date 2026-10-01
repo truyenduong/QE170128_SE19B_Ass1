@@ -1,12 +1,16 @@
 import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { ToastProvider } from '@/components/ToastContext';
 
+const geist = Geist({ subsets: ['latin'], variable: '--font-geist-sans' });
+const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' });
+
 export const metadata: Metadata = {
-  title: 'TaskTrack — Task & Team Management Application',
-  description: 'PRN232 Assignment 1 — Public Task and Department Management system built with ASP.NET Core 8 & Next.js.',
+  title: 'TaskTrack | Work operating system',
+  description: 'A focused workspace for departments, projects, and tasks.',
 };
 
 export default function RootLayout({
@@ -15,14 +19,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased font-sans">
+    <html lang="en" className={`dark ${geist.variable} ${geistMono.variable}`}>
+      <body className="min-h-screen antialiased font-sans">
         <ToastProvider>
           <Navbar />
-          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {children}
-          </main>
-          <Footer />
+          <div className="workspace-shell">
+            <main className="workspace-content">
+              {children}
+            </main>
+            <Footer />
+          </div>
         </ToastProvider>
       </body>
     </html>
