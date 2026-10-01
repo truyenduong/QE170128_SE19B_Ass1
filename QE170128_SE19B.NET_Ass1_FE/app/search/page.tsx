@@ -29,6 +29,8 @@ export default function SearchPage() {
   const [tags, setTags] = useState<Tag[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [metadataError, setMetadataError] = useState<string | null>(null);
 
   // Fetch filter metadata (projects and tags)
   useEffect(() => {
@@ -39,6 +41,7 @@ export default function SearchPage() {
         setTags(tagRes);
       } catch (err) {
         console.error('Failed to load filter metadata', err);
+        setMetadataError('Some filter options are unavailable right now.');
       }
     }
     loadMeta();
@@ -56,9 +59,11 @@ export default function SearchPage() {
         tagId: tagId === -1 ? undefined : tagId,
       });
       setTasks(results);
+      setSearchError(null);
     } catch (err) {
       console.error('Search failed', err);
       setTasks([]);
+      setSearchError(err instanceof Error ? err.message : 'Task results could not be loaded.');
     } finally {
       setLoading(false);
     }
@@ -81,42 +86,39 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="space-y-7 animate-in fade-in duration-300">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-          <SearchIcon className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
-          Task Search & Filter
+        <p className="mb-2 text-[10px] font-bold uppercase text-cyan-300">Task index</p>
+        <h1 className="flex items-center gap-2.5 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
+          Find the next thing
         </h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Real-time interactive multi-criteria filter across all active project deliverables.
+        <p className="mt-2 text-sm text-slate-400">
+          Search the work queue and narrow it down as priorities shift.
         </p>
       </div>
 
-      {/* Filter Control Bar */}
-      <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
-        {/* Title input */}
+      <div className="space-y-4 rounded-2xl border border-slate-800 bg-slate-900 p-5 md:p-6">
         <div className="relative">
-          <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <SearchIcon className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-cyan-300" />
           <input
             type="text"
             placeholder="Search tasks by title keyword..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-white"
+            className="w-full rounded-xl border border-slate-700 bg-slate-800/70 py-3 pl-11 pr-4 text-sm text-slate-100 transition-all focus:outline-none focus:ring-2 focus:ring-cyan-300/30"
           />
         </div>
 
-        {/* Filter Dropdowns Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+        <div className="grid grid-cols-1 gap-3 pt-1 sm:grid-cols-2 xl:grid-cols-4">
           {/* Status Select */}
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-              Status
+            <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-500">
+              Work state
             </label>
             <select
               value={status}
               onChange={(e) => setStatus(parseInt(e.target.value, 10))}
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2.5 text-xs font-medium text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-300/30"
             >
               <option value={-1}>All Statuses</option>
               <option value={0}>To Do</option>
@@ -128,13 +130,13 @@ export default function SearchPage() {
 
           {/* Priority Select */}
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+            <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-500">
               Priority
             </label>
             <select
               value={priority}
               onChange={(e) => setPriority(parseInt(e.target.value, 10))}
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2.5 text-xs font-medium text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-300/30"
             >
               <option value={-1}>All Priorities</option>
               <option value={0}>Low</option>
@@ -146,13 +148,13 @@ export default function SearchPage() {
 
           {/* Project Select */}
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+            <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-500">
               Project
             </label>
             <select
               value={projectId}
               onChange={(e) => setProjectId(parseInt(e.target.value, 10))}
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 truncate"
+              className="w-full truncate rounded-lg border border-slate-700 bg-slate-800 px-3 py-2.5 text-xs font-medium text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-300/30"
             >
               <option value={-1}>All Projects</option>
               {projects.map((p) => (
@@ -165,13 +167,13 @@ export default function SearchPage() {
 
           {/* Tag Select */}
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+            <label className="mb-1.5 block text-[10px] font-bold uppercase text-slate-500">
               Tag
             </label>
             <select
               value={tagId}
               onChange={(e) => setTagId(parseInt(e.target.value, 10))}
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2.5 text-xs font-medium text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-300/30"
             >
               <option value={-1}>All Tags</option>
               {tags.map((t) => (
@@ -183,42 +185,45 @@ export default function SearchPage() {
           </div>
         </div>
 
-        {/* Clear Filters */}
-        <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-          <div className="text-slate-500 dark:text-slate-400 font-medium">
-            Found <span className="font-bold text-slate-900 dark:text-white">{tasks.length}</span> matching tasks
+        <div className="flex items-center justify-between border-t border-slate-800 pt-3 text-xs">
+          <div className="font-medium text-slate-400">
+            <span className="font-semibold text-slate-100">{tasks.length}</span> results in this view
           </div>
 
           {(title || status !== -1 || priority !== -1 || projectId !== -1 || tagId !== -1) && (
             <button
               onClick={handleReset}
-              className="inline-flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 font-medium transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-cyan-300 transition-colors hover:text-cyan-200"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              Reset Filters
+              Clear filters
             </button>
           )}
         </div>
       </div>
 
-      {/* Results List */}
       {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+        <div aria-label="Loading task results" className="space-y-2 animate-pulse">
+          {Array.from({ length: 4 }, (_, index) => <div key={index} className="h-24 rounded-xl border border-slate-800 bg-slate-900" />)}
+        </div>
+      ) : searchError ? (
+        <div role="alert" className="rounded-xl border border-rose-900/70 bg-rose-950/35 p-5 text-sm text-rose-200">
+          <div className="font-semibold">Task results are unavailable</div>
+          <p className="mt-1 text-xs text-rose-200/70">{searchError}</p>
         </div>
       ) : tasks.length === 0 ? (
-        <div className="text-center py-16 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-8">
+        <div className="rounded-xl border border-dashed border-slate-700 bg-slate-900/60 px-6 py-16 text-center">
           <CheckSquare className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-          <h3 className="text-base font-semibold text-slate-800 dark:text-slate-200">No tasks matched your criteria</h3>
-          <p className="text-xs text-slate-400 mt-1">Try broadening your search term or clearing one of the filters.</p>
+          <h3 className="text-base font-semibold text-slate-200">No work found for this combination</h3>
+          <p className="mt-1 text-xs text-slate-500">Adjust a filter or clear the search to widen the list.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 gap-2">
           {tasks.map((task) => (
             <Link
               key={task.taskId}
               href={`/tasks/${task.taskId}`}
-              className="group flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-600 hover:shadow-md transition-all"
+              className="group flex flex-col justify-between gap-4 rounded-xl border border-slate-800 bg-slate-900 p-4 transition-colors hover:border-cyan-300/30 md:flex-row md:items-center"
             >
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -238,12 +243,12 @@ export default function SearchPage() {
                   )}
                 </div>
 
-                <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                <h3 className="text-sm font-semibold text-slate-100 transition-colors group-hover:text-cyan-200">
                   {task.title}
                 </h3>
 
                 {task.description && (
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
+                  <p className="text-xs text-slate-500 line-clamp-1">
                     {task.description}
                   </p>
                 )}

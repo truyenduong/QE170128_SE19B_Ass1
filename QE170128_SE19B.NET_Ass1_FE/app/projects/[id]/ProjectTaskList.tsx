@@ -38,29 +38,27 @@ export default function ProjectTaskList({ tasks }: ProjectTaskListProps) {
 
   return (
     <div className="space-y-6">
-      {/* Header and Status Filter Tabs (Bonus Feature) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+      <div className="flex flex-col justify-between gap-4 border-b border-slate-800 pb-4 sm:flex-row sm:items-end">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <CheckSquare className="w-5 h-5 text-indigo-500" />
-            Project Tasks
-            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300">
+          <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-100">
+            <CheckSquare className="h-5 w-5 text-cyan-300" />
+            Work items
+            <span className="rounded-full border border-slate-700 bg-slate-800 px-2 py-0.5 text-[10px] font-semibold text-slate-300">
               {tasks.length}
             </span>
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Click any task to inspect details and metadata
+          <p className="mt-1 text-xs text-slate-500">
+            Filter the project workload by its current state.
           </p>
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div aria-label="Filter tasks by status" className="flex flex-wrap items-center gap-1.5">
           <button
             onClick={() => setStatusFilter('all')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               statusFilter === 'all'
-                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'
+                ? 'bg-cyan-300 text-[#10131a]'
+                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
             }`}
           >
             All ({statusCounts.all})
@@ -69,8 +67,8 @@ export default function ProjectTaskList({ tasks }: ProjectTaskListProps) {
             onClick={() => setStatusFilter(0)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               statusFilter === 0
-                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'
+                ? 'bg-cyan-300 text-[#10131a]'
+                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
             }`}
           >
             To Do ({statusCounts.todo})
@@ -79,8 +77,8 @@ export default function ProjectTaskList({ tasks }: ProjectTaskListProps) {
             onClick={() => setStatusFilter(1)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               statusFilter === 1
-                ? 'bg-sky-600 text-white'
-                : 'bg-sky-50 text-sky-700 hover:bg-sky-100 dark:bg-sky-950/40 dark:text-sky-300'
+                ? 'bg-cyan-300 text-[#10131a]'
+                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
             }`}
           >
             In Progress ({statusCounts.inProgress})
@@ -89,8 +87,8 @@ export default function ProjectTaskList({ tasks }: ProjectTaskListProps) {
             onClick={() => setStatusFilter(2)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
               statusFilter === 2
-                ? 'bg-emerald-600 text-white'
-                : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300'
+                ? 'bg-cyan-300 text-[#10131a]'
+                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
             }`}
           >
             Done ({statusCounts.done})
@@ -99,19 +97,19 @@ export default function ProjectTaskList({ tasks }: ProjectTaskListProps) {
       </div>
 
       {filteredTasks.length === 0 ? (
-        <div className="text-center py-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-8">
+        <div className="rounded-xl border border-dashed border-slate-700 bg-slate-900/60 px-6 py-12 text-center">
           <CheckSquare className="w-10 h-10 text-slate-300 mx-auto mb-2" />
           <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
-            No tasks match the selected status filter.
+            No work items match this status.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 gap-2">
           {filteredTasks.map((task) => (
             <Link
               key={task.taskId}
               href={`/tasks/${task.taskId}`}
-              className="group flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-600 hover:shadow-md transition-all"
+              className="group flex flex-col justify-between gap-4 rounded-xl border border-slate-800 bg-slate-900 p-4 transition-colors hover:border-cyan-300/30 md:flex-row md:items-center"
             >
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -125,12 +123,12 @@ export default function ProjectTaskList({ tasks }: ProjectTaskListProps) {
                   )}
                 </div>
 
-                <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                <h3 className="text-sm font-semibold text-slate-100 transition-colors group-hover:text-cyan-200">
                   {task.title}
                 </h3>
 
                 {task.description && (
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
+                  <p className="text-xs text-slate-500 line-clamp-1">
                     {task.description}
                   </p>
                 )}

@@ -18,13 +18,13 @@ export default function PriorityBadge({ priority, showIcon = true }: PriorityBad
   const renderIcon = () => {
     switch (priority) {
       case 3:
-        return <AlertCircle className="w-3 h-3 text-red-500 mr-1 animate-pulse" />;
+        return <AlertCircle className="w-3 h-3 text-red-300" />;
       case 2:
-        return <AlertTriangle className="w-3 h-3 text-orange-500 mr-1" />;
+        return <AlertTriangle className="w-3 h-3 text-orange-300" />;
       case 1:
-        return <ArrowUp className="w-3 h-3 text-blue-500 mr-1" />;
+        return <ArrowUp className="w-3 h-3 text-sky-300" />;
       case 0:
-        return <ArrowDown className="w-3 h-3 text-teal-500 mr-1" />;
+        return <ArrowDown className="w-3 h-3 text-teal-300" />;
       default:
         return null;
     }
@@ -32,8 +32,9 @@ export default function PriorityBadge({ priority, showIcon = true }: PriorityBad
 
   return (
     <span
-      className={`inline-flex items-center text-xs px-2.5 py-0.5 font-medium rounded-full border ${config.bg} ${config.color}`}
+      className={`inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 font-semibold rounded-full border leading-none ${config.bg} ${config.color}`}
     >
+      {showIcon && <span className={`size-1.5 rounded-full ${config.dot}`} />}
       {showIcon && renderIcon()}
       {config.label}
     </span>

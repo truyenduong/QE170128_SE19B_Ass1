@@ -133,37 +133,37 @@ export default function DepartmentManagePage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            <Layers className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
-            Department Management
+          <p className="mb-2 text-[10px] font-bold uppercase text-cyan-300">Workspace settings</p>
+          <h1 className="flex items-center gap-2.5 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
+            <Layers className="h-6 w-6 text-cyan-300" /> Team studio
           </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Create, update, and manage organizational departments (Public CRUD).
+          <p className="mt-2 text-sm text-slate-400">
+            Shape the groups that bring your projects and people together.
           </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-500/10 transition-colors self-start sm:self-auto"
+          className="inline-flex items-center gap-2 self-start rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 sm:self-auto"
         >
           <Plus className="w-4 h-4" />
-          Add Department
+          New team
         </button>
       </div>
 
       {/* Departments Table */}
-      <div className="overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50/75 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               <tr>
-                <th className="px-6 py-4">ID</th>
-                <th className="px-6 py-4">Department Name</th>
-                <th className="px-6 py-4">Description</th>
+                <th className="px-6 py-4">Ref</th>
+                <th className="px-6 py-4">Team</th>
+                <th className="px-6 py-4">Scope</th>
                 <th className="px-6 py-4">Projects</th>
-                <th className="px-6 py-4">Status</th>
+                <th className="px-6 py-4">Visibility</th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
@@ -172,13 +172,13 @@ export default function DepartmentManagePage() {
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
                     <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-indigo-600" />
-                    Loading departments...
+                    Loading teams...
                   </td>
                 </tr>
               ) : departments.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
-                    No departments found.
+                    No teams have been created yet.
                   </td>
                 </tr>
               ) : (
@@ -202,11 +202,11 @@ export default function DepartmentManagePage() {
                     <td className="px-6 py-4">
                       {dept.isActive ? (
                         <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                          <CheckCircle2 className="w-3.5 h-3.5" /> Active
+                          <CheckCircle2 className="w-3.5 h-3.5" /> Live
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-400">
-                          <XCircle className="w-3.5 h-3.5" /> Inactive
+                          <XCircle className="w-3.5 h-3.5" /> Hidden
                         </span>
                       )}
                     </td>
@@ -215,14 +215,16 @@ export default function DepartmentManagePage() {
                         <button
                           onClick={() => openEditModal(dept)}
                           className="p-1.5 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                          title="Edit Department"
+                          title="Edit team"
+                          aria-label={`Edit ${dept.departmentName}`}
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setDeletingId(dept.departmentId)}
                           className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                          title="Delete Department"
+                          title="Delete team"
+                          aria-label={`Delete ${dept.departmentName}`}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -240,18 +242,18 @@ export default function DepartmentManagePage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingDept ? 'Edit Department' : 'Create Department'}
+        title={editingDept ? 'Update team' : 'Create a team'}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-              Department Name <span className="text-red-500">*</span>
+              Team name <span className="text-red-400">*</span>
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Engineering, Design, Quality Assurance"
+              placeholder="Name this group"
               className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-white ${
                 formErrors.name 
                   ? 'border-red-500 focus:ring-red-400' 
@@ -265,13 +267,13 @@ export default function DepartmentManagePage() {
 
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-              Department Description <span className="text-red-500">*</span>
+              What this team owns <span className="text-red-400">*</span>
             </label>
             <textarea
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Brief description of department scope and responsibilities..."
+              placeholder="Describe its focus and responsibilities"
               className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-white ${
                 formErrors.description 
                   ? 'border-red-500 focus:ring-red-400' 
@@ -292,7 +294,7 @@ export default function DepartmentManagePage() {
               className="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
             />
             <label htmlFor="deptActive" className="text-sm font-medium text-slate-700 dark:text-slate-300">
-              Department is active
+              Show this team in the workspace
             </label>
           </div>
 
@@ -310,7 +312,7 @@ export default function DepartmentManagePage() {
               className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 rounded-lg shadow-sm transition-colors flex items-center gap-2"
             >
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
-              {editingDept ? 'Update Department' : 'Create Department'}
+              {editingDept ? 'Save team' : 'Create team'}
             </button>
           </div>
         </form>
@@ -321,9 +323,9 @@ export default function DepartmentManagePage() {
         isOpen={deletingId !== null}
         onClose={() => setDeletingId(null)}
         onConfirm={handleDeleteConfirm}
-        title="Delete Department"
-        message="Are you sure you want to delete this department? This operation will be rejected by the server if any projects are currently linked to it."
-        confirmLabel="Delete Department"
+        title="Remove this team?"
+        message="This team will be removed from the workspace. The request cannot complete while projects are still linked to it."
+        confirmLabel="Remove team"
         isLoading={isDeleting}
       />
     </div>

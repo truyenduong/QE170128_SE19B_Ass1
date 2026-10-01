@@ -42,16 +42,16 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={{ showToast, success, error, info }}>
       {children}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
+      <div aria-live="polite" className="fixed bottom-4 right-4 z-50 flex w-[calc(100%-2rem)] max-w-sm flex-col gap-2 pointer-events-none">
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl shadow-lg border backdrop-blur-md transition-all animate-in slide-in-from-bottom-2 ${
+            className={`pointer-events-auto flex items-start gap-3 rounded-xl border p-4 shadow-[0_18px_55px_rgba(0,0,0,0.4)] backdrop-blur-xl transition-all animate-in slide-in-from-bottom-2 ${
               t.type === 'success'
-                ? 'bg-emerald-50/95 dark:bg-emerald-950/90 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200'
+                ? 'bg-emerald-950/95 border-emerald-800 text-emerald-200'
                 : t.type === 'error'
-                ? 'bg-rose-50/95 dark:bg-rose-950/90 border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200'
-                : 'bg-indigo-50/95 dark:bg-indigo-950/90 border-indigo-200 dark:border-indigo-800 text-indigo-800 dark:text-indigo-200'
+                ? 'bg-rose-950/95 border-rose-800 text-rose-200'
+                : 'bg-slate-900/95 border-slate-700 text-slate-200'
             }`}
           >
             {t.type === 'success' && <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />}
@@ -63,6 +63,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             </div>
 
             <button
+              aria-label="Dismiss notification"
               onClick={() => removeToast(t.id)}
               className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 rounded"
             >

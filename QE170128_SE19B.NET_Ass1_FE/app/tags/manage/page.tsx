@@ -141,36 +141,36 @@ export default function TagManagePage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            <TagIcon className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
-            Tag Management
+          <p className="mb-2 text-[10px] font-bold uppercase text-emerald-300">Workspace settings</p>
+          <h1 className="flex items-center gap-2.5 text-2xl font-semibold tracking-tight text-slate-100 sm:text-3xl">
+            <TagIcon className="h-6 w-6 text-emerald-300" /> Label palette
           </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Define labels and hex colors for categorization across project deliverables (Public CRUD).
+          <p className="mt-2 text-sm text-slate-400">
+            Create reusable labels to make related work easy to spot.
           </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-md shadow-emerald-500/10 transition-colors self-start sm:self-auto"
+          className="inline-flex items-center gap-2 self-start rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-600 sm:self-auto"
         >
           <Plus className="w-4 h-4" />
-          Add Tag
+          New label
         </button>
       </div>
 
       {/* Tags Table */}
-      <div className="overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50/75 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               <tr>
-                <th className="px-6 py-4">ID</th>
-                <th className="px-6 py-4">Tag Name</th>
-                <th className="px-6 py-4">Preview & Color Code</th>
-                <th className="px-6 py-4">Linked Tasks</th>
+                <th className="px-6 py-4">Ref</th>
+                <th className="px-6 py-4">Label</th>
+                <th className="px-6 py-4">Appearance</th>
+                <th className="px-6 py-4">Used on tasks</th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
@@ -179,13 +179,13 @@ export default function TagManagePage() {
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
                     <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-emerald-600" />
-                    Loading tags...
+                    Loading labels...
                   </td>
                 </tr>
               ) : tags.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-slate-400">
-                    No tags found.
+                    No labels have been created yet.
                   </td>
                 </tr>
               ) : (
@@ -226,14 +226,16 @@ export default function TagManagePage() {
                         <button
                           onClick={() => openEditModal(tag)}
                           className="p-1.5 rounded-lg text-slate-500 hover:text-emerald-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                          title="Edit Tag"
+                          title="Edit label"
+                          aria-label={`Edit ${tag.tagName}`}
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setDeletingId(tag.tagId)}
                           className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                          title="Delete Tag"
+                          title="Delete label"
+                          aria-label={`Delete ${tag.tagName}`}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -251,18 +253,18 @@ export default function TagManagePage() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingTag ? 'Edit Tag' : 'Create Tag'}
+        title={editingTag ? 'Update label' : 'Create a label'}
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
-              Tag Name <span className="text-red-500">*</span>
+              Label name <span className="text-red-400">*</span>
             </label>
             <input
               type="text"
               value={tagName}
               onChange={(e) => setTagName(e.target.value)}
-              placeholder="e.g. frontend, backend, bug, feature"
+              placeholder="Name this label"
               className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-white ${
                 formErrors.tagName ? 'border-red-500 focus:ring-red-400' : 'border-slate-200 dark:border-slate-700 focus:ring-emerald-500'
               }`}
@@ -272,7 +274,7 @@ export default function TagManagePage() {
 
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5 flex items-center justify-between">
-              <span>Hex Color</span>
+              <span>Label color</span>
               <span className="font-mono text-[11px] text-slate-400">{color}</span>
             </label>
             
@@ -314,7 +316,7 @@ export default function TagManagePage() {
           {/* Live Preview */}
           <div className="pt-2">
             <span className="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-              Live Preview
+              Preview
             </span>
             <span
               className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-mono font-medium"
@@ -343,7 +345,7 @@ export default function TagManagePage() {
               className="px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 rounded-lg shadow-sm transition-colors flex items-center gap-2"
             >
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
-              {editingTag ? 'Update Tag' : 'Create Tag'}
+              {editingTag ? 'Save label' : 'Create label'}
             </button>
           </div>
         </form>
@@ -354,9 +356,9 @@ export default function TagManagePage() {
         isOpen={deletingId !== null}
         onClose={() => setDeletingId(null)}
         onConfirm={handleDeleteConfirm}
-        title="Delete Tag"
-        message="Are you sure you want to delete this tag? This operation will be rejected by the server if this tag is currently assigned to one or more tasks."
-        confirmLabel="Delete Tag"
+        title="Remove this label?"
+        message="The label will be removed from the workspace. The request cannot complete while tasks still use it."
+        confirmLabel="Remove label"
         isLoading={isDeleting}
       />
     </div>
